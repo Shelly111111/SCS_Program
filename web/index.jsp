@@ -14,6 +14,5 @@
     <label>
       Hello World!
     </label>
-  <label></label>
   </body>
 </html>
