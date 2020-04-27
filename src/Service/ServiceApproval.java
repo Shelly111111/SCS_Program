@@ -25,6 +25,20 @@ public class ServiceApproval {
         }
     }
 
+    //TODO,@刘亦菲，查询用户是否拥有该权限
+    private boolean CheckApproval(char Approval)
+    {
+        switch (Approval){
+            case 'a':
+                //Select .....根据select查找是否有该权限,没有权限的话，return false
+                return false;
+            default:
+                break;
+
+        }
+        return true;
+    }
+
     private void receive() {
         try {
             DESUtil des = new DESUtil();
@@ -51,15 +65,16 @@ public class ServiceApproval {
                             Qgrant = des.decrypt(Qgrant,Ksess.getBytes("ISO-8859-1"));
                             String Request = new String(Qgrant,"ISO-8859-1");
                             //TODO,这里解析请求
-                            switch (Request.trim().charAt(Request.length()-1)){
-                                case 'a':
-                                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                                    bufferedWriter.write("Respone:你申请的服务是服务'a'" + "\n");
-                                    bufferedWriter.flush();
-                                    //System.out.println("Respone:你申请的服务是服务'a'");
-                                    break;
-                                default:
-                                    break;
+                            char Approval = Request.trim().charAt(Request.length()-1);
+                            if(CheckApproval(Approval)) {
+                                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                                bufferedWriter.write("Respone:您申请的服务是服务是" + Approval + "\n");
+                                bufferedWriter.flush();
+                            }
+                            else {
+                                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                                bufferedWriter.write("Error:您没有该服务权限" + "\n");
+                                bufferedWriter.flush();
                             }
                         }
                     }
